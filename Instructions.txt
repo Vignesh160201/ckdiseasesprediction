@@ -1,0 +1,24 @@
+To run streamlit
+cd  /folder_structure/
+pip install -r requirments.txt
+python -m streamlit run streamlit_app.py
+
+
+TO build docker 
+
+docker build -t streamlit-app .
+
+ To run docker
+
+ docker ps -a
+ docker images
+
+ docker run -p 8000:8000 streamlit-app
+
+ To delete docker images
+ docker images
+ docker rmi <image_name>
+
+ To delete Docker container
+ docker ps -a
+docker rm <container_id>

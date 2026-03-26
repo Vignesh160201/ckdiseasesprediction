@@ -1,0 +1,6 @@
+This folder has diabetes models.
+The below Models are best for detecting  diabetes models.
+1.Decision Tree Classifier 
+2.Logistic Regression
+3.LG BM Classifier
+4.XGB Classifier

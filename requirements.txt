@@ -1,0 +1,48 @@
+
+# Core Python
+numpy
+pandas
+scipy
+
+# Machine Learning
+scikit-learn
+xgboost
+lightgbm
+#catboost
+#imbalanced-learn
+
+# Deep Learning (for tabular + healthcare)
+#keras
+#torch
+#torchvision
+#torchaudio
+
+# Explainability
+#shap
+#lime
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+#User Interface
+streamlit>=1.32.0
+#altair==4.2.2
+# Feature Engineering & Stats
+#statsmodels
+#category-encoders
+
+# Data Handling
+openpyxl
+xlrd
+pyarrow
+
+# Model Persistence
+joblib
+pickle-mixin
+
+# Utilities
+tqdm
+pyyaml
+

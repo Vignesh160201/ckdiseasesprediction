@@ -1,0 +1,89 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none   # manual run
+
+stages:
+
+# 🔹 Stage 1: Docker Check & Test
+- stage: Docker_check
+  displayName: 'Docker Check'
+
+  jobs:
+  - job: DockerCheck
+    displayName: 'Docker Check'
+    pool:
+      name: 'kali'
+
+    variables:
+      imageName: 'ckdpregistry.azurecr.io/ckdiseasesprediction:latest'
+
+    steps:
+
+    # 🔹 Verify Docker
+    - script: |
+        echo "Checking Docker..."
+        docker ps
+        docker images
+      displayName: 'Verify Docker Access'
+
+    # 🔹 Cleanup old container (important)
+    - script: |
+        docker rm -f test-container || true
+      displayName: 'Cleanup old container'
+
+    # 🔹 Run container
+    - script: |
+        echo "Starting container..."
+        docker run -d -p 8000:8000 --name test-container $(imageName)
+      displayName: 'Run Container'
+
+    # 🔹 Wait
+    - script: |
+        echo "Waiting for app..."
+        sleep 20
+      displayName: 'Wait'
+
+    # 🔹 Check running container
+    - script: |
+        docker ps
+      displayName: 'Check Running Container'
+
+    # 🔹 Test app
+    - script: |
+        echo "Testing app..."
+        curl -f http://localhost:8000 || exit 1
+      displayName: 'Health Check'
+
+    # 🔹 Logs
+    - script: |
+        echo "Container Logs:"
+        docker logs test-container
+      displayName: 'Logs'
+
+    # 🔹 Cleanup
+    - script: |
+        docker stop test-container
+        docker rm test-container
+      displayName: 'Cleanup'
+
+# 🔹 Stage 2: Deploy
+- stage: Deploy
+  displayName: 'Deploy to Web App'
+  dependsOn: Docker_check   # ✅ fixed
+
+  jobs:
+  - job: Deploy
+    pool:
+      name: 'kali'
+
+    steps:
+
+    - task: AzureWebAppContainer@1
+      displayName: 'Deploy Container'
+      inputs:
+        azureSubscription: 'Streamlit_App'
+        appName: 'CK-Diseases-Prediction-1'
+        containers: 'ckdpregistry.azurecr.io/ckdiseasesprediction:latest'

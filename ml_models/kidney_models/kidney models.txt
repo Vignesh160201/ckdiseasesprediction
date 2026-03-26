@@ -1,0 +1,9 @@
+This folder has Kidney models
+The below Models are best for detecting  Kidney models.
+1.Decision Tree Classifier 
+2.Hybrid -Bagged - DT Model
+3.Logistic Regression
+4.Random Forest Classifier
+5.Stacked -LR-RF-XGB
+6.Stacked -RF-XGB 
+7.SVC

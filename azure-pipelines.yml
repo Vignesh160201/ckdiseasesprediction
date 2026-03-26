@@ -1,0 +1,55 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - Dockerfile
+      - requirements.txt
+
+pool:
+  name: 'kali'   # your self-hosted agent
+
+variables:
+- name: imageName
+  value: ckdiseasesprediction
+
+- name: dockerfilePath
+  value: '$(Build.SourcesDirectory)/Dockerfile'
+
+- name: tag
+  value: latest
+
+- name: dockerRegistryServiceConnection
+  value: ckdpregistry-connection   # your service connection
+
+stages:
+
+# 🔹 Stage 1: Build & Push Docker Image
+- stage: BuildAndPush
+  displayName: Build and Push Image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      name: 'kali'
+
+    steps:
+
+    # ✅ Step 1: Verify Docker
+    - script: |
+        echo "Checking Docker..."
+        docker ps
+        docker images
+      displayName: 'Verify Docker Access'
+
+    # ✅ Step 2: Build & Push to ACR
+    - task: Docker@2
+      displayName: Build and Push Image to ACR
+      inputs:
+        command: buildAndPush
+        repository: ckdiseasesprediction
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
